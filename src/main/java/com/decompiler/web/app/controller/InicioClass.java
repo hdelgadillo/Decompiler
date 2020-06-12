@@ -54,7 +54,7 @@ public class InicioClass {
 		Path path = Paths.get(builder.toString());
 		Files.write(path, fileBytes);
 		
-		attributes.addFlashAttribute("message", "decompilacion exitosa  { " +builder.toString());
+		attributes.addFlashAttribute("message", "decompilacion exitosa  { " +miDir.getCanonicalPath());
 		
 		Runtime.getRuntime().exec("java -jar "+miDir.getCanonicalPath()+"/lib/decompiler.jar -jar "+builder.toString()+" -o "+builder.toString()+"OUT");
 
