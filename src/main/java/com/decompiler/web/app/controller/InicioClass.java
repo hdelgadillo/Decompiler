@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.decompiler.web.app.utils.UtilJar;
 import com.decompiler.web.app.utils.utilZip;
 
 import net.lingala.zip4j.exception.ZipException;
@@ -76,6 +78,7 @@ public class InicioClass {
 		String javaJ = javaP + File.separator+"java";
 		String metaI = inicio + File.separator + "WEB-INF"+File.separator+"classes";
 		String pom = inicio + File.separator + "META-INF";
+		String pom2 = template+File.separator+"META-INF";
 		String org = inicio + File.separator+"com";
 		String comando = "java -jar "+miDir.getCanonicalPath()+File.separator+"lib"+File.separator+"decompiler.jar -jar "+builder.toString()+" -o "+inicio;
 		
@@ -85,14 +88,18 @@ public class InicioClass {
 		File ArchivoJC = new File(javaJ);
 		File ArchivoT = new File(template);
 		
-		attributes.addFlashAttribute("message", "decompilacion exitosa  { " +comando);
-		
+		String ext2 = FilenameUtils.getExtension(builder.toString()); // returns "exe"
+		System.out.println(ext2);
 		ArchivoP.mkdir();
 		ArchivoR.mkdir();
 		ArchivoJ.mkdir();
 		ArchivoJC.mkdir();
 		ArchivoT.mkdir();
 		
+		
+		if(ext2.equals("war")) {
+		
+	
 		
 		
 		utilZip.decompiler(comando);
@@ -103,7 +110,21 @@ public class InicioClass {
 		
 	
 
+		
+		}else if(ext2.equals("jar")) {
+				utilZip.decompiler(comando);
+				UtilJar.jarUnzip(template, builder.toString());
+				utilZip.CopySRC(org,javaJ);
+				utilZip.Bpom(pom2, proyecto);
+			}	
+		else {
+				System.out.println("no hay nada");
+			}
+		
+		attributes.addFlashAttribute("message", "decompilacion exitosa  { " +proyecto);
+		
 		return "redirect:/status";
+		
 	}
 	
 	@GetMapping("/status")
