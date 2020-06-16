@@ -73,7 +73,17 @@ public class utilZip {
 	
 	public static void decompiler(String comando) throws IOException {
 		
+		
 		Runtime.getRuntime().exec(comando);
+		
+		
+		
+		
+	
+		
+		
+
+
 		
 	}
 

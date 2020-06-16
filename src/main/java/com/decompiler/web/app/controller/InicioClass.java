@@ -72,21 +72,32 @@ public class InicioClass {
 		Files.write(path, fileBytes);
 		
 		String proyecto = inicio+File.separator+anio+"-"+mes+"-"+dia+"-"+hora+"-"+minutos+"-"+segundos;
+		String tmp = proyecto+"tmp";
 		String resources =proyecto+File.separator+"src";
 		String javaP = resources + File.separator+"main";
 		String template = javaP + File.separator+"resources";
 		String javaJ = javaP + File.separator+"java";
-		String metaI = inicio + File.separator + "WEB-INF"+File.separator+"classes";
-		String pom = inicio + File.separator + "META-INF";
+		String javaJ1 = javaP + File.separator+"java"+File.separator+"com";
+		String metaI = tmp + File.separator + "WEB-INF";
+		String tmpJar = tmp+ File.separator+"com";
+		String Classes = metaI+File.separator+"classes";
+		String pom = tmp + File.separator + "META-INF";
 		String pom2 = template+File.separator+"META-INF";
-		String org = inicio + File.separator+"com";
-		String comando = "java -jar "+miDir.getCanonicalPath()+File.separator+"lib"+File.separator+"decompiler.jar -jar "+builder.toString()+" -o "+inicio;
+		String jarDeco=tmp+File.separator+file.getOriginalFilename();
+		
+		String comando = "java -jar "+miDir.getCanonicalPath()+File.separator+"lib"+File.separator+"proc.jar -jar "+builder.toString()+" -o "+tmp;
+		
+		
+		
+		
+		String comando2= "java -jar "+miDir.getCanonicalPath()+File.separator+"lib"+File.separator+"decompiler.jar  "+tmpJar+"   "+javaJ;
 		
 		File ArchivoP = new File(proyecto);
 		File ArchivoR = new File(resources);
 		File ArchivoJ = new File(javaP);
 		File ArchivoJC = new File(javaJ);
 		File ArchivoT = new File(template);
+		File tmpA = new File(tmp);
 		
 		String ext2 = FilenameUtils.getExtension(builder.toString()); // returns "exe"
 		System.out.println(ext2);
@@ -95,33 +106,46 @@ public class InicioClass {
 		ArchivoJ.mkdir();
 		ArchivoJC.mkdir();
 		ArchivoT.mkdir();
+		tmpA.mkdir();
+		
 		
 		
 		if(ext2.equals("war")) {
 		
 	
 		
-		
 		utilZip.decompiler(comando);
-		utilZip.unzip(inicio,builder.toString());
-		utilZip.BuscarR(metaI,template);
+		
+		utilZip.unzip(tmp,builder.toString());
+		
+		
+		utilZip.BuscarR(Classes,template);
 		utilZip.Bpom(pom, proyecto);
-		utilZip.CopySRC(org,javaJ);
+		utilZip.CopySRC(tmpJar, javaJ);
+		
 		
 	
 
 		
 		}else if(ext2.equals("jar")) {
-				utilZip.decompiler(comando);
-				UtilJar.jarUnzip(template, builder.toString());
-				utilZip.CopySRC(org,javaJ);
-				utilZip.Bpom(pom2, proyecto);
+				//utilZip.decompiler(comando);
+				
+
+				utilZip.unzip(tmp,builder.toString());
+				
+				//UtilJar.jarUnzip(template, builder.toString());
+			    utilZip.BuscarR(tmp,template);
+				utilZip.Bpom(pom, proyecto);
+				utilZip.decompiler(comando2);
 			}	
-		else {
-				System.out.println("no hay nada");
+	
+		else if(ext2.equals("ear")) {
+				
 			}
-		
-		attributes.addFlashAttribute("message", "decompilacion exitosa  { " +proyecto);
+		else {
+			System.out.println("ear");
+		}
+attributes.addFlashAttribute("message", "decompilacion exitosa  { " +jarDeco);
 		
 		return "redirect:/status";
 		
