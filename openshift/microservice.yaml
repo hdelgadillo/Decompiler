@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: List
+metadata: {}
+items:
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      pipeline.alpha.openshift.io/uses: '[{"name": "microservice", "namespace": "", "kind": "DeploymentConfig"}]'
+    name: microservice-pipeline
+  spec:
+    source:
+      git:
+        ref: master
+        uri: https://github.com/avrdevops/git-usuarios.git
+      type: Git
+    triggers:
+    - type: GitHub
+      github:
+        secret: 3dd259c692157519
+    runPolicy: Serial     
+    strategy:
+      type: JenkinsPipeline
+      jenkinsPipelineStrategy:
+        jenkinsfilePath: Jenkinsfile

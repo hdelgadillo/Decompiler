@@ -140,6 +140,9 @@ public class InicioClass {
 			}	
 	
 		else if(ext2.equals("ear")) {
+			String ext3 = FilenameUtils.getExtension(tmp);
+			utilZip.unzip(tmp,builder.toString() );
+			System.out.println(ext3);
 				
 			}
 		else {
