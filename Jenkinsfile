@@ -1,13 +1,13 @@
 node('maven') {
   stage('Build') {
-    git url: "https://github.com/avrdevops/git-usuarios.git"
+    git url: "https://github.com/hdelgadillo/Decompiler.git"
     sh "mvn package"
-    stash name:"jar", includes:"target/Docauto-0.0.1.jar"
+    stash name:"jar", includes:"target/decompiler-app-0.0.1-SNAPSHOT.jar"
   }
   stage('Build Image') {
     unstash name:"jar"
     sh 'ls -l -R'
-    sh "oc start-build usuarios --from-file=target/Docauto-0.0.1.jar --follow"
+    sh "oc start-build usuarios --from-file=target/decompiler-app-0.0.1-SNAPSHOT.jar --follow"
     
     
   }
